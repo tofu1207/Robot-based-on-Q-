@@ -4,8 +4,6 @@
 * Written by Coxxs & Thanks for the help of orzFly
 */
 
-
-#include <strstream>
 #include "stdafx.h"
 #include "string"
 #include "cqp.h"
@@ -16,40 +14,10 @@
 *---------------------------   ostream 转 string   --------------------------------*
  --------------------------------------------------------------------------------*/
 void ostream_to_string(std::ostream& out) {
-	char* a = { "" };
-	out << a;
-}
+	char* a = { (char*)"" };
 
-// 测试用的机器人与交流方对象
-string robot(void) {
-	using namespace std;
-
-	//构建对象(交流方)
-	Robot::Person tofu(2890851110, 100);
-
-
-	// 构建机器人
-	string name = "浅鸟";
-	string dream = "画家";
-	string hobby[3] = { "乒乓球", "跑步", "画画" };
-	string likeFood[3] = { "草莓", "豆腐", "马肉" };
-	string likeSport[2] = { "乒乓球", "跑步" };
-	string oral[2] = { "呐", "昂" };
-	time_b birth{ 2020, month_t::m2, day_t::d22 };
-	int hobbyNum = sizeof(hobby) / sizeof(hobby[0]);
-	int likeFoodNum = sizeof(likeFood) / sizeof(likeFood[0]);
-	int likeSportNum = sizeof(likeSport) / sizeof(likeSport[0]);
-	int oralNum = sizeof(oral) / sizeof(oral[0]);
-	Robot ShallowBird(name, gender_t::girl, birth, hobby, likeFood, likeSport, oral, dream, &tofu,
-		hobbyNum, likeFoodNum, likeSportNum, oralNum);
-
-	//输出调试
-	std::ostrstream out;
-	out << ShallowBird;
-	ostream_to_string(out);
-
-
-	return out.str();
+	// std::ends 字符串结束符, 防止内存泄漏
+	out << a << std::ends;
 }
 
 //using namespace std;
@@ -129,7 +97,7 @@ CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t msgId, int64_t 
 	
 	if(fromQQ == MASTERQQ && (string)msg == "浅鸟"){
 		CQ_sendPrivateMsg(ac, fromQQ, "你好, 豆腐!");
-		CQ_sendPrivateMsg(ac, fromQQ, robot().c_str());
+
 	}
 	//如果要回复消息，请调用酷Q方法发送，并且这里 return EVENT_BLOCK - 截断本条消息，不再继续处理  注意：应用优先级设置为"最高"(10000)时，不得使用本返回值
 	//如果不回复消息，交由之后的应用/过滤器处理，这里 return EVENT_IGNORE - 忽略本条消息

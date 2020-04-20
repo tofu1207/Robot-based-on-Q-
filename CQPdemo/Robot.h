@@ -73,7 +73,24 @@ public:
 	{
 	public:
 		Person() {};
-		Person(QQ_T QQ, int goodWill = 0) : m_QQ(QQ), m_goodWill(goodWill) {};
+
+		// 文件载入数据使用的对象构造
+		Person(QQ_T QQ, int goodWill = 0,	//必须的构造参数 
+			string name = "",
+			gender_t gender = gender_t::unknown,
+			time_b birth = { 0, month_t::m1, day_t::d1 });
+
+		// 设置名字
+		void setName(string name) { m_name = name; }
+		// 设置性别
+		void setGender(gender_t gender) { m_gender = gender; }
+		// 设置生日
+		void setBirth(time_b birth) { 
+			m_birth.year = birth.year;
+			m_birth.month = birth.month;
+			m_birth.day = birth.day;
+		}
+
 		virtual ~Person() {};
 
 		// 重载 cout << Person类对象
@@ -82,13 +99,14 @@ public:
 			return out;
 		}
 
+
+
 	private:
 		QQ_T m_QQ = 0;	//QQ号
 		int m_goodWill = 0;	//好感度
 		string m_name = "";	//姓名
 		gender_t m_gender = gender_t::unknown;	//性别
 		time_b m_birth;	//生日
-		// Person m_lover;	//爱人
 
 	};
 
@@ -105,28 +123,20 @@ public:
 	
 	// 获取机器人名字
 	string getName() const { return m_name; }
-
 	// 获取机器人性别
 	gender_t getGender() const { return m_gender; }
-
 	// 获取机器人生日
 	time_b getBirth() const { return m_birth; }
-
 	// 获取机器人爱好
 	vector<string> getHobby() const { return m_hobby; }
-
 	// 获取机器人喜欢的食物
 	vector<string> getLikeFood() const { return m_likeFood; }
-
 	// 获取机器人喜欢的运动
 	vector<string> getLikeSport() const { return m_likeSport; }
-
 	// 获取机器人的口头禅
 	vector<string> getOral() const { return m_oral; }
-
 	// 获取机器人的梦想
 	string getDream() const { return m_dream; }
-
 	// 获取机器人的爱人
 	Person getLover() const { return m_lover; }
 

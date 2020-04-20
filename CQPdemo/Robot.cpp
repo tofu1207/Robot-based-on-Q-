@@ -34,3 +34,8 @@ Robot::Robot(string name, gender_t gender, time_b birth,
 Robot::~Robot()
 {
 }
+
+Robot::Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth) :
+	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
+{
+}
