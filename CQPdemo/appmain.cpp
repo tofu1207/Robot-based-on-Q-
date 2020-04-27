@@ -5,25 +5,13 @@
 */
 
 #include "stdafx.h"
-#include "string"
+#include <string>
+#include <sstream>
 #include "cqp.h"
 #include "appmain.h"//应用AppID等信息，请正确填写，否则酷Q可能无法加载
-#include "Robot.h"	//机器人类
 
-/*--------------------------------------------------------------------------------
-*---------------------------   ostream 转 string   --------------------------------*
- --------------------------------------------------------------------------------*/
-void ostream_to_string(std::ostream& out) {
-	char* a = { (char*)"" };
-
-	// std::ends 字符串结束符, 防止内存泄漏
-	out << a << std::ends;
-}
-
-//using namespace std;
-
-int ac = -1; //AuthCode 调用酷Q的方法时需要用到
-bool enabled = false;
+extern int ac = -1; //AuthCode 调用酷Q的方法时需要用到
+extern bool enabled = false;
 
 
 /* 
@@ -50,7 +38,6 @@ CQEVENT(int32_t, Initialize, 4)(int32_t AuthCode) {
 * 如非必要，不建议在这里加载窗口。（可以添加菜单，让用户手动打开窗口）
 */
 CQEVENT(int32_t, __eventStartup, 0)() {
-
 	return 0;
 }
 
@@ -71,6 +58,7 @@ CQEVENT(int32_t, __eventExit, 0)() {
 * 如果酷Q载入时应用已被启用，则在_eventStartup(Type=1001,酷Q启动)被调用后，本函数也将被调用一次。
 * 如非必要，不建议在这里加载窗口。（可以添加菜单，让用户手动打开窗口）
 */
+
 CQEVENT(int32_t, __eventEnable, 0)() {
 	enabled = true;
 	return 0;
@@ -93,10 +81,14 @@ CQEVENT(int32_t, __eventDisable, 0)() {
 * Type=21 私聊消息
 * subType 子类型，11/来自好友 1/来自在线状态 2/来自群 3/来自讨论组
 */
-CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t msgId, int64_t fromQQ, const char *msg, int32_t font) {
-	
+CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t msgId, int64_t fromQQ, const char *msg, int32_t font) 
+{
+	Robot robot("ShallowBird.ini", "AirPerson.ini");
 	if(fromQQ == MASTERQQ && (string)msg == "浅鸟"){
 		CQ_sendPrivateMsg(ac, fromQQ, "你好, 豆腐!");
+		std::ostringstream out;
+		out << robot;
+		robot.sendPrivateMag(fromQQ, out.str().c_str());
 
 	}
 	//如果要回复消息，请调用酷Q方法发送，并且这里 return EVENT_BLOCK - 截断本条消息，不再继续处理  注意：应用优先级设置为"最高"(10000)时，不得使用本返回值
@@ -200,7 +192,8 @@ CQEVENT(int32_t, __eventRequest_AddGroup, 32)(int32_t subType, int32_t sendTime,
 * 菜单，可在 .json 文件中设置菜单数目、函数名
 * 如果不使用菜单，请在 .json 及此处删除无用菜单
 */
-/*CQEVENT(int32_t, __menuA, 0)() {
+/*
+CQEVENT(int32_t, __menuA, 0)() {
 	//MessageBoxA(NULL, "这是menuA，在这里载入窗口，或者进行其他工作。", "" ,0);
 	return 0;
 }
@@ -208,4 +201,5 @@ CQEVENT(int32_t, __eventRequest_AddGroup, 32)(int32_t subType, int32_t sendTime,
 CQEVENT(int32_t, __menuB, 0)() {
 	//MessageBoxA(NULL, "这是menuB，在这里载入窗口，或者进行其他工作。", "" ,0);
 	return 0;
-}*/
+}
+*/

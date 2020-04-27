@@ -1,12 +1,13 @@
 // 酷Q 的Json文件支持以 // 开头的注释。
 // 开发模式下，应用的 app.dll, app.json 的文件须放在 dev/[appid]/ 目录下，应用 AppInfo 函数返回的内容须改为 appid
 // 如 appid=com.example.democ, 则dll及json文件需分别放在 dev/com.example.democ/app.dll、dev/com.example.democ/app.json
+
 {
   "ret": 1, // 返回码，固定为1
   "apiver": 9, // Api版本，本SDK为9
   "name": "tofuRobot", // 应用名称
-  "version": "1.0.0", // 应用版本
-  "version_id": 1, // 应用顺序版本（每次发布时至少+1）
+  "version": "1.0.1", // 应用版本
+  "version_id": 2, // 应用顺序版本（每次发布时至少+1）
   "author": "tofu", // 应用作者
   "description": "人格机器人",
   "event": [ // 事件列表，同一事件类型可重复定义（发布前请删除无用事件）
@@ -102,9 +103,6 @@
       "function": "_eventDisable"
     }
   ],
-  /*"menu": [ // 设置菜单（发布前请删除无用菜单，如果无需设置菜单请全部删除）
-    
-  ],*/
   "status": [ // 悬浮窗状态（见 com.example.status 样例）
 
   ],
@@ -114,7 +112,7 @@
     101, //发送群消息			sendGroupMsg
     103, //发送讨论组消息		sendDiscussMsg
     106, //发送私聊消息		sendPrivateMsg
-    //110,  //[敏感]发送赞				sendLike
+    110, //[敏感]发送赞				sendLike
     120, //置群员移除			setGroupKick
     121, //置群员禁言			setGroupBan
     122, //置群管理员			setGroupAdmin
@@ -122,7 +120,7 @@
     124, //置匿名群员禁言		setGroupAnonymousBan
     125, //置群匿名设置		setGroupAnonymous
     126, //置群成员名片		setGroupCard
-    //127,  //[敏感]置群退出	setGroupLeave
+    127, //[敏感]置群退出	setGroupLeave
     128, //置群成员专属头衔	setGroupSpecialTitle
     130, //取群成员信息		getGroupMemberInfoV2 / getGroupMemberInfo
     131, //取陌生人信息		getStrangerInfo

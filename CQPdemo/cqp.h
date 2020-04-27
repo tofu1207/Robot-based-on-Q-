@@ -185,12 +185,12 @@ CQAPI(const char *) CQ_getStrangerInfo(int32_t AuthCode, int64_t QQID, CQBOOL no
 */
 CQAPI(int32_t) CQ_addLog(int32_t AuthCode, int32_t priority, const char *category, const char *content);
 
-/*
+/* Robot无实现
 * 取Cookies 慎用, 此接口需要严格授权
 */
 CQAPI(const char *) CQ_getCookies(int32_t AuthCode);
 
-/*
+/* Robot无实现
 * 取CsrfToken 慎用, 此接口需要严格授权
 */
 CQAPI(int32_t) CQ_getCsrfToken(int32_t AuthCode);
