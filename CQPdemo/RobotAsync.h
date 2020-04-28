@@ -3,7 +3,6 @@
 #include <queue>
 #include <mutex>
 #include <Windows.h>
-
 #include "ThreadBase.h"
 #include "Robot.h"
 #include "CQApi.h"

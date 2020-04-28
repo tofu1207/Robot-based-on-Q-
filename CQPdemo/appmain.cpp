@@ -13,7 +13,7 @@
 
 extern int ac = -1; //AuthCode 调用酷Q的方法时需要用到
 extern bool enabled = false;
-RobotAsync* robot = new RobotAsync();
+std::shared_ptr<RobotAsync> robot(new RobotAsync());
 
 
 
@@ -41,6 +41,7 @@ CQEVENT(int32_t, Initialize, 4)(int32_t AuthCode) {
 * 如非必要，不建议在这里加载窗口。（可以添加菜单，让用户手动打开窗口）
 */
 CQEVENT(int32_t, __eventStartup, 0)() {
+	robot->start();
 	return 0;
 }
 
@@ -53,11 +54,7 @@ CQEVENT(int32_t, __eventStartup, 0)() {
 CQEVENT(int32_t, __eventExit, 0)() {
 
 	// 回收资源
-	if (robot != nullptr)
-	{
-		robot->quite();
-		delete robot;
-	}
+	// 智能指针自动回收
 
 	return 0;
 }
@@ -70,7 +67,7 @@ CQEVENT(int32_t, __eventExit, 0)() {
 */
 
 CQEVENT(int32_t, __eventEnable, 0)() {
-	robot->start();
+	
 	enabled = true;
 	return 0;
 }

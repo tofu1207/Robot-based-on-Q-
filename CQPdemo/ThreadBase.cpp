@@ -13,15 +13,12 @@ void ThreadBase::start()
 {
     if (m_thread == NULL)
     {
-        m_thread = new std::thread{ &ThreadBase::threadMain,this };
+        std::shared_ptr<std::thread> p(new std::thread{ &ThreadBase::threadMain,this });
+        m_thread = p;
     }
 }
 
 void ThreadBase::quit()
 {
-    if (m_thread != nullptr)
-    {
-        delete m_thread;
-        m_thread = nullptr;
-    }
+    
 }

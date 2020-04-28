@@ -12,5 +12,5 @@ public:
 protected:
     virtual void threadMain() = 0;
 private:
-    std::thread* m_thread;
+    std::shared_ptr<std::thread> m_thread;
 };
