@@ -15,7 +15,7 @@ namespace rr
 		bool ReadConfig(const std::string& filename);
 		std::string ReadString(const char* section, const char* item, const char* default_value);
 		int ReadInt(const char* section, const char* item, const int& default_value);
-		float ReadFloat(const char* section, const char* item, const float& default_value);
+		double ReadFloat(const char* section, const char* item, const float& default_value);
 	private:
 		bool IsSpace(char c);
 		bool IsCommentChar(char c);

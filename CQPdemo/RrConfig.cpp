@@ -28,8 +28,8 @@ namespace rr
 		{
 			return;
 		}
-		int i, start_pos, end_pos;
-		for ( i = 0; i < str.size(); ++i) {
+		int i = 0, start_pos, end_pos;
+		for (unsigned i = 0; i < str.size(); ++i) {
 			if (!IsSpace(str[i])) {
 				break;
 			}
@@ -164,7 +164,7 @@ namespace rr
 		return atoi(it_item->second.c_str());
 	}
 
-	float RrConfig::ReadFloat(const char* section, const char* item, const float& default_value)
+	double RrConfig::ReadFloat(const char* section, const char* item, const float& default_value)
 	{
 		std::string tmp_s(section);
 		std::string tmp_i(item);

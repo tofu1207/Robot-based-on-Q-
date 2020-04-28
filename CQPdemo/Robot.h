@@ -11,6 +11,13 @@ using std::string;
 using std::vector;
 
 /*--------------------------------------------------------------------------------
+*------------------------------   读取文件   --------------------------------------*
+ --------------------------------------------------------------------------------*/
+extern char* ROBOTINI;
+extern char* PERSONINI;
+
+
+/*--------------------------------------------------------------------------------
 *------------------------------   主人QQ号   --------------------------------------*
  --------------------------------------------------------------------------------*/
 extern const QQ_T MASTERQQ;
@@ -50,6 +57,19 @@ struct time_b {
 	}
 };
 
+/*--------------------------------------------------------------------------------
+*------------------------------   消息类型   --------------------------------------*
+ --------------------------------------------------------------------------------*/
+struct Msg
+{
+	int32_t msgId;
+	int64_t fromAddr;   // 私聊为0
+	int64_t fromQQ;
+	std::string msg;
+
+	Msg(int32_t msgId, int64_t fromAddr, int64_t fromQQ, std::string msg)
+		:msgId(msgId), fromQQ(fromQQ), fromAddr(fromAddr), msg(msg) {}
+};
 
 /*--------------------------------------------------------------------------------
 *------------------------------   性别枚举   --------------------------------------*
@@ -70,6 +90,70 @@ struct stringInt
 	int i;
 };
 
+/*--------------------------------------------------------------------------------
+*---------------------------   交流方信息类型   -----------------------------------*
+ --------------------------------------------------------------------------------*/
+ /*
+ class Person
+ {
+ public:
+	 Person() {};
+
+	 // 使用数据初始化机器人初始数据
+	 Person(QQ_T QQ, int goodWill = 0,	//必须的构造参数
+		 string name = "",
+		 gender_t gender = gender_t::unknown,
+		 time_b birth = { 0, month_t::m1, day_t::d1 });
+
+	 virtual ~Person() {};
+
+	 // 设置名字
+	 void setName(string name) { m_name = name; }
+	 // 设置性别
+	 void setGender(gender_t gender) { m_gender = gender; }
+	 // 设置生日
+	 void setBirth(time_b birth) {
+		 m_birth.year = birth.year;
+		 m_birth.month = birth.month;
+		 m_birth.day = birth.day;
+	 }
+
+	 // 重载 cout << Person类对象
+	 friend std::ostream& operator<<(std::ostream& out, const Person& obj) {
+		 out << "QQ: " << obj.m_QQ << " (好感度: " << obj.m_goodWill << ")";
+		 return out;
+	 }
+
+ private:
+	 QQ_T m_QQ = 0;	//QQ号
+	 int m_goodWill = 0;	//好感度
+	 string m_name = "";	//姓名
+	 gender_t m_gender = gender_t::unknown;	//性别
+	 time_b m_birth;	//生日
+
+ };
+ */
+struct Person
+{
+	QQ_T m_QQ = 0;							//QQ号
+	int m_goodWill = 0;						//好感度
+	string m_name = "";						//姓名
+	gender_t m_gender = gender_t::unknown;	//性别
+	time_b m_birth;							//生日
+
+	Person();
+
+	Person(QQ_T QQ, int goodWill = 0,	//必须的构造参数
+		string name = "",
+		gender_t gender = gender_t::unknown,
+		time_b birth = { 0, month_t::m1, day_t::d1 });
+
+	// 重载 cout << Person类对象
+	friend std::ostream& operator<<(std::ostream& out, const Person& obj) {
+		out << obj.m_QQ << " (好感度: " << obj.m_goodWill << ")";
+		return out;
+	}
+};
 
 /*--------------------------------------------------------------------------------
 *------------------------------   机器人类   --------------------------------------*
@@ -77,47 +161,6 @@ struct stringInt
 class Robot
 {
 public:
-	class Person
-	{
-	public:
-		Person() {};
-
-		// 文件载入数据使用的对象构造
-		Person(QQ_T QQ, int goodWill = 0,	//必须的构造参数 
-			string name = "",
-			gender_t gender = gender_t::unknown,
-			time_b birth = { 0, month_t::m1, day_t::d1 });
-
-		virtual ~Person() {};
-
-		// 设置名字
-		void setName(string name) { m_name = name; }
-		// 设置性别
-		void setGender(gender_t gender) { m_gender = gender; }
-		// 设置生日
-		void setBirth(time_b birth) { 
-			m_birth.year = birth.year;
-			m_birth.month = birth.month;
-			m_birth.day = birth.day;
-		}
-
-		// 重载 cout << Person类对象
-		friend std::ostream& operator<<(std::ostream& out, const Person& obj) {
-			out << "QQ: "<< obj.m_QQ << " (好感度: " << obj.m_goodWill << ")";
-			return out;
-		}
-
-
-
-	private:
-		QQ_T m_QQ = 0;	//QQ号
-		int m_goodWill = 0;	//好感度
-		string m_name = "";	//姓名
-		gender_t m_gender = gender_t::unknown;	//性别
-		time_b m_birth;	//生日
-
-	};
-
 	Robot();
 
 	// 使用数据初始化机器人初始数据
@@ -128,6 +171,7 @@ public:
 
 	// 使用文件数据初始化机器人初始数据 格式: .ini
 	Robot(char* file, char* personfile);
+
 	virtual ~Robot();
 
 	/*--------------------------------------------------------------------------------
@@ -153,7 +197,6 @@ public:
 	string getDream() const { return m_dream; }
 	// 获取机器人的爱人
 	Person getLover() const { return m_lover; }
-	
 
 	// 重载 cout << Robot类对象
 	friend std::ostream& operator<<(std::ostringstream& out, const Robot& obj) {
@@ -183,8 +226,6 @@ public:
 		return out;
 	}
 
-public:
-	//class RobotAsync m_robot;	//机器人线程
 private:
 	string m_name;	//姓名
 	gender_t m_gender;//性别
@@ -210,4 +251,8 @@ private:
 extern string to_String(QQ_T n);
 // 穷举遍历字符数组
 extern stringInt getString(rr::RrConfig config, const char* section, const char* item, const char* default_value);
+// 获取交流方信息
+extern Person getPerson(QQ_T QQ);
+// 设置交流方信息
+extern void setPerson(QQ_T QQ);
  

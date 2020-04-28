@@ -3,21 +3,9 @@
 #include <queue>
 #include <mutex>
 #include <Windows.h>
-#include "ThreadBase.h"
-#include "Robot.h"
-#include "CQApi.h"
+#include "ThreadBase.h" //线程基类
+#include "Robot.h"      //机器人类
 
-
-struct Msg
-{
-    int32_t msgId;
-    int64_t fromAddr;   // 私聊为0
-    int64_t fromQQ;
-    std::string msg;
-
-    Msg(int32_t msgId, int64_t fromAddr, int64_t fromQQ, std::string msg)
-        :msgId(msgId), fromQQ(fromQQ), fromAddr(fromAddr), msg(msg) {}
-};
 
 class RobotAsync :
 	public ThreadBase

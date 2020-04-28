@@ -3,18 +3,16 @@
 * Api Version 9
 * Written by Coxxs & Thanks for the help of orzFly
 */
-
 #include "stdafx.h"
 #include <string>
 #include <sstream>
 #include "cqp.h"
 #include "appmain.h"//应用AppID等信息，请正确填写，否则酷Q可能无法加载
-#include "RobotAsync.h"	//机器人类
+#include "RobotAsync.h"	//机器人线程类
 
 extern int ac = -1; //AuthCode 调用酷Q的方法时需要用到
 extern bool enabled = false;
 std::shared_ptr<RobotAsync> robot(new RobotAsync());
-
 
 
 /* 

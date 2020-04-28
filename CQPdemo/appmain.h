@@ -6,3 +6,4 @@
 extern int ac; //AuthCode 调用酷Q的方法时需要用到
 extern bool enabled;
 
+

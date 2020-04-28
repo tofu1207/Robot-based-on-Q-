@@ -1,7 +1,19 @@
 #include "Robot.h"
 
+#include "CQApi.h"      //CQ的api重构
 
+extern char* ROBOTINI = "ShallowBird.ini";
+extern char* PERSONINI = "C:\\Person.ini";
 extern const QQ_T MASTERQQ = 2890851110;
+
+Person::Person()
+{
+}
+
+Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth):
+	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
+{
+}
 
 Robot::Robot()
 {
@@ -34,6 +46,8 @@ Robot::Robot(string name, gender_t gender, time_b birth,
 	}
 }
 
+
+
 Robot::Robot(char* file, char* personfile)
 {
 	// 获取文件中的数据
@@ -59,7 +73,7 @@ Robot::Robot(char* file, char* personfile)
 	personini.ReadConfig(personfile);
 	string sitem = "QQ" + to_String(loverQQ);
 	int goodwill = personini.ReadInt(sitem.c_str(), "goodwill", 0);
-	Robot::Person lover{ loverQQ, goodwill };
+	Person lover{ loverQQ, goodwill };
 
 	time_b birth;
 	birth.year = robotini.ReadInt("Birth", "year", 0);
@@ -93,13 +107,6 @@ Robot::~Robot()
 }
 
 
-
-
-Robot::Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth) :
-	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
-{
-}
-
 extern string to_String(QQ_T n)
 {
 	const int max = 100;
@@ -127,6 +134,7 @@ extern string to_String(QQ_T n)
 	ss[j] = '\0';
 	return ss;
 }
+
 extern stringInt getString(rr::RrConfig config, const char* section, const char* item, const char* default_value)
 {
 
@@ -147,4 +155,97 @@ extern stringInt getString(rr::RrConfig config, const char* section, const char*
 	si.i = i - 1;
 	si.str = str;
 	return si;
+}
+
+extern Person getPerson(QQ_T QQ)
+{
+	// 获取文件中的数据
+	rr::RrConfig personini;
+	personini.ReadConfig(PERSONINI);
+	string sitem = "QQ" + to_String(QQ);
+	if (::GetPrivateProfileInt(sitem.c_str(), "qqid", 0, PERSONINI) == 0) {
+		return Person(0);
+	}
+	int goodwill = personini.ReadInt(sitem.c_str(), "goodwill", 0);
+	string name = personini.ReadString(sitem.c_str(), "name", "");
+	gender_t gender;
+	if (personini.ReadString(sitem.c_str(), "gender", "") == "男") {
+		gender = gender_t::boy;
+	}
+	else if (personini.ReadString(sitem.c_str(), "gender", "") == "女") {
+		gender = gender_t::girl;
+	}
+	else {
+		gender = gender_t::unknown;
+	}
+	time_b birth;
+	birth.year = personini.ReadInt(sitem.c_str(), "birth.year", 0);
+	birth.month = month_t(personini.ReadInt(sitem.c_str(), "birth.month", 0));
+	birth.day = day_t(personini.ReadInt(sitem.c_str(), "birth.day", 0));
+	Person person(QQ, goodwill, name, gender, birth);
+	return person;
+}
+
+void setPerson(QQ_T QQ)
+{
+	// 读取 QQ 的字段地址
+	rr::RrConfig personini;
+	personini.ReadConfig(PERSONINI);
+	string sitem = "QQ" + to_String(QQ);
+
+	// 保存现有的person数据
+	Person tem_person = getPerson(QQ);
+	if (tem_person.m_QQ == 0) {
+		::WritePrivateProfileString(sitem.c_str(), "qqid", to_String(QQ).c_str(), PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "goodwill", "0", PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "name", "", PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "gender", to_String((int)gender_t::unknown).c_str(), PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "birh.year", "0", PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "birth.month", to_String((int)month_t::m1).c_str(), PERSONINI);
+		::WritePrivateProfileString(sitem.c_str(), "birth.day", to_String((int)day_t::d1).c_str(), PERSONINI);
+	}
+	else {
+		::WritePrivateProfileString(sitem.c_str(), "qqid", to_String(tem_person.m_QQ).c_str(), PERSONINI);
+		if (tem_person.m_goodWill != 0) {
+			::WritePrivateProfileString(sitem.c_str(), "goodwill", to_String(tem_person.m_goodWill).c_str(), PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "goodwill", "0", PERSONINI);
+		}
+
+		if (tem_person.m_name != "") {
+			::WritePrivateProfileString(sitem.c_str(), tem_person.m_name.c_str(), "", PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "name", "", PERSONINI);
+		}
+
+		if (tem_person.m_gender != gender_t::unknown) {
+			::WritePrivateProfileString(sitem.c_str(), "gender", to_String((int)tem_person.m_gender).c_str(), PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "gender", to_String((int)gender_t::unknown).c_str(), PERSONINI);
+		}
+
+		if (tem_person.m_birth.year != 0) {
+			::WritePrivateProfileString(sitem.c_str(), "birh.year", to_String(tem_person.m_birth.year).c_str(), PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "birh.year", "0", PERSONINI);
+		}
+
+		if (tem_person.m_birth.month != month_t::m1) {
+			::WritePrivateProfileString(sitem.c_str(), "birth.month", to_String((int)tem_person.m_birth.month).c_str(), PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "birth.month", to_String((int)month_t::m1).c_str(), PERSONINI);
+		}
+
+		if (tem_person.m_birth.day != day_t::d1) {
+			::WritePrivateProfileString(sitem.c_str(), "birth.day", to_String((int)tem_person.m_birth.day).c_str(), PERSONINI);
+		}
+		else {
+			::WritePrivateProfileString(sitem.c_str(), "birth.day", to_String((int)day_t::d1).c_str(), PERSONINI);
+		}
+	}
 }
