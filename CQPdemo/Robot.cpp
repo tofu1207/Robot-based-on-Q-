@@ -93,130 +93,7 @@ Robot::~Robot()
 }
 
 
-int Robot::sendPrivateMag(int64_t QQID, const char* msg)
-{
-	return CQ_sendPrivateMsg(ac, QQID, msg);
-}
 
-int Robot::sendGroupMsg(int64_t groupid, const char* msg)
-{
-	return CQ_sendGroupMsg(ac, groupid, msg);;
-}
-
-int Robot::sendDiscussMsg(int64_t discussid, const char* msg)
-{
-	return CQ_sendDiscussMsg(ac, discussid, msg);
-}
-
-int Robot::deleteMsg(int64_t msgid)
-{
-	return CQ_deleteMsg(ac, msgid);
-}
-
-int Robot::sendLike(int64_t QQID)
-{
-	return CQ_sendLike(ac, QQID);
-}
-
-int Robot::setGroupKick(int64_t groupid, int64_t QQID, CQBOOL rejectaddrequest)
-{
-	return  CQ_setGroupKick(ac, groupid, QQID, rejectaddrequest);
-}
-
-int Robot::setGroupBan(int64_t groupid, int64_t QQID, int64_t duration)
-{
-	return CQ_setGroupBan(ac, groupid, QQID, duration);
-}
-
-int Robot::setGroupAdmin(int64_t groupid, int64_t QQID, CQBOOL setadmin)
-{
-	return CQ_setGroupAdmin(ac, groupid, QQID, setadmin);
-}
-
-int Robot::setGroupWholeBan(int64_t groupid, CQBOOL enableban)
-{
-	return CQ_setGroupWholeBan(ac, groupid, enableban);
-}
-
-int Robot::setGroupAnonymousBan(int64_t groupid, const char* anomymous, int64_t duration)
-{
-	return CQ_setGroupAnonymousBan(ac, groupid, anomymous, duration);
-}
-
-int Robot::setGroupAnonymous(int64_t groupid, CQBOOL enableanomymous)
-{
-	return CQ_setGroupAnonymous(ac, groupid, enableanomymous);
-}
-
-int Robot::setGroupCard(int64_t groupid, int64_t QQID, const char* newcard)
-{
-	return CQ_setGroupCard(ac, groupid, QQID, newcard);
-}
-
-int Robot::setGroupLeave(int64_t groupid, CQBOOL isdismiss)
-{
-	return CQ_setGroupLeave(ac, groupid, isdismiss);
-}
-
-int Robot::setGroupSpecialTitle(int64_t groupid, int64_t QQID, const char* newspecialtitle, int64_t duration)
-{
-	return CQ_setGroupSpecialTitle(ac, groupid, QQID, newspecialtitle, duration);
-}
-
-int Robot::setDiscussLeave(int64_t discussid)
-{
-	return CQ_setDiscussLeave(ac, discussid);
-}
-
-int Robot::setFriendAddRequest(const char* responseflag, int32_t responseoperation, const char* remark)
-{
-	return CQ_setFriendAddRequest(ac, responseflag, responseoperation, remark);
-}
-
-int Robot::setGroupAddRequestV2(const char* responseflag, int32_t requesttype, int32_t responseoperation, const char* reason)
-{
-	return CQ_setGroupAddRequestV2(ac, responseflag, requesttype, responseoperation, reason);
-}
-
-const char* Robot::getGroupMemberInfoV2(int64_t groupid, int64_t QQID, CQBOOL nocache)
-{
-	return CQ_getGroupMemberInfoV2(ac, groupid, QQID, nocache);
-}
-
-const char* Robot::getStrangerInfo(int64_t QQID, CQBOOL nocache)
-{
-	return CQ_getStrangerInfo(ac, QQID, nocache);
-}
-
-int Robot::addLog(int32_t priority, const char* category, const char* content)
-{
-	return CQ_addLog(ac, priority, category, content);
-}
-
-int64_t Robot::getLoginQQ()
-{
-	return CQ_getLoginQQ(ac);
-}
-
-const char* Robot::getLoginNick()
-{
-	return CQ_getLoginNick(ac);
-}
-
-const char* Robot::getAppDirectory()
-{
-	return CQ_getAppDirectory(ac);
-}
-
-int Robot::setFatal(const char* errorinfo)
-{
-	return CQ_setFatal(ac, errorinfo);
-}
-
-const char* Robot::getRecord(const char* file, const char* outformat)
-{
-	return CQ_getRecord(ac, file, outformat);
-}
 
 Robot::Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth) :
 	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
@@ -250,7 +127,6 @@ extern string to_String(QQ_T n)
 	ss[j] = '\0';
 	return ss;
 }
-
 extern stringInt getString(rr::RrConfig config, const char* section, const char* item, const char* default_value)
 {
 

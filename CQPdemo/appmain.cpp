@@ -9,9 +9,12 @@
 #include <sstream>
 #include "cqp.h"
 #include "appmain.h"//应用AppID等信息，请正确填写，否则酷Q可能无法加载
+#include "RobotAsync.h"	//机器人类
 
 extern int ac = -1; //AuthCode 调用酷Q的方法时需要用到
 extern bool enabled = false;
+RobotAsync* robot = new RobotAsync();
+
 
 
 /* 
@@ -49,6 +52,13 @@ CQEVENT(int32_t, __eventStartup, 0)() {
 */
 CQEVENT(int32_t, __eventExit, 0)() {
 
+	// 回收资源
+	if (robot != nullptr)
+	{
+		robot->quite();
+		delete robot;
+	}
+
 	return 0;
 }
 
@@ -60,6 +70,7 @@ CQEVENT(int32_t, __eventExit, 0)() {
 */
 
 CQEVENT(int32_t, __eventEnable, 0)() {
+	robot->start();
 	enabled = true;
 	return 0;
 }
@@ -83,14 +94,16 @@ CQEVENT(int32_t, __eventDisable, 0)() {
 */
 CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t msgId, int64_t fromQQ, const char *msg, int32_t font) 
 {
-	Robot robot("ShallowBird.ini", "AirPerson.ini");
-	if(fromQQ == MASTERQQ && (string)msg == "浅鸟"){
-		CQ_sendPrivateMsg(ac, fromQQ, "你好, 豆腐!");
-		std::ostringstream out;
-		out << robot;
-		robot.sendPrivateMag(fromQQ, out.str().c_str());
+	
+	//if(fromQQ == MASTERQQ && (string)msg == "浅鸟"){
+	//	CQ_sendPrivateMsg(ac, fromQQ, "你好, 豆腐!");
+	//}
 
-	}
+	// 抛入消息
+	Msg info(msgId, 0, fromQQ, msg);
+	robot->pushMsg(info);
+
+
 	//如果要回复消息，请调用酷Q方法发送，并且这里 return EVENT_BLOCK - 截断本条消息，不再继续处理  注意：应用优先级设置为"最高"(10000)时，不得使用本返回值
 	//如果不回复消息，交由之后的应用/过滤器处理，这里 return EVENT_IGNORE - 忽略本条消息
 	return EVENT_IGNORE;
@@ -102,6 +115,10 @@ CQEVENT(int32_t, __eventPrivateMsg, 24)(int32_t subType, int32_t msgId, int64_t 
 */
 CQEVENT(int32_t, __eventGroupMsg, 36)(int32_t subType, int32_t msgId, int64_t fromGroup, int64_t fromQQ, const char *fromAnonymous, const char *msg, int32_t font) {
 	
+	// 抛入消息
+	Msg info(msgId, fromGroup, fromQQ, msg);
+	robot->pushMsg(info);
+
 	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
 }
 
@@ -110,6 +127,10 @@ CQEVENT(int32_t, __eventGroupMsg, 36)(int32_t subType, int32_t msgId, int64_t fr
 * Type=4 讨论组消息
 */
 CQEVENT(int32_t, __eventDiscussMsg, 32)(int32_t subType, int32_t msgId, int64_t fromDiscuss, int64_t fromQQ, const char *msg, int32_t font) {
+
+	// 抛入消息
+	Msg info(msgId, fromDiscuss, fromQQ, msg);
+	robot->pushMsg(info);
 
 	return EVENT_IGNORE; //关于返回值说明, 见“_eventPrivateMsg”函数
 }
