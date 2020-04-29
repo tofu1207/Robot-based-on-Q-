@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <Windows.h>
 #include "RrConfig.h"
 
 typedef std::int64_t QQ_T;
@@ -9,6 +10,7 @@ typedef std::int64_t QQ_T;
 using std::endl;
 using std::string;
 using std::vector;
+
 
 /*--------------------------------------------------------------------------------
 *------------------------------   读取文件   --------------------------------------*
@@ -55,6 +57,7 @@ struct time_b {
 			<< (int)obj.day << "日";
 		return out;
 	}
+
 };
 
 /*--------------------------------------------------------------------------------
@@ -93,46 +96,6 @@ struct stringInt
 /*--------------------------------------------------------------------------------
 *---------------------------   交流方信息类型   -----------------------------------*
  --------------------------------------------------------------------------------*/
- /*
- class Person
- {
- public:
-	 Person() {};
-
-	 // 使用数据初始化机器人初始数据
-	 Person(QQ_T QQ, int goodWill = 0,	//必须的构造参数
-		 string name = "",
-		 gender_t gender = gender_t::unknown,
-		 time_b birth = { 0, month_t::m1, day_t::d1 });
-
-	 virtual ~Person() {};
-
-	 // 设置名字
-	 void setName(string name) { m_name = name; }
-	 // 设置性别
-	 void setGender(gender_t gender) { m_gender = gender; }
-	 // 设置生日
-	 void setBirth(time_b birth) {
-		 m_birth.year = birth.year;
-		 m_birth.month = birth.month;
-		 m_birth.day = birth.day;
-	 }
-
-	 // 重载 cout << Person类对象
-	 friend std::ostream& operator<<(std::ostream& out, const Person& obj) {
-		 out << "QQ: " << obj.m_QQ << " (好感度: " << obj.m_goodWill << ")";
-		 return out;
-	 }
-
- private:
-	 QQ_T m_QQ = 0;	//QQ号
-	 int m_goodWill = 0;	//好感度
-	 string m_name = "";	//姓名
-	 gender_t m_gender = gender_t::unknown;	//性别
-	 time_b m_birth;	//生日
-
- };
- */
 struct Person
 {
 	QQ_T m_QQ = 0;							//QQ号
@@ -147,6 +110,16 @@ struct Person
 		string name = "",
 		gender_t gender = gender_t::unknown,
 		time_b birth = { 0, month_t::m1, day_t::d1 });
+	
+	// 修改好感
+	void setGoodwill(int goodwill);
+	// 修改名字
+	void setName(string name);
+	// 修改性别
+	void setGender(gender_t gender);
+	// 修改生日
+	void serBirth(time_b birrh);
+	
 
 	// 重载 cout << Person类对象
 	friend std::ostream& operator<<(std::ostream& out, const Person& obj) {
@@ -243,7 +216,6 @@ private:
 	int m_oralNum = 0;
 };
 
-
 /*--------------------------------------------------------------------------------
 *----------------------------   全局函数表   -------------------------------------*
  --------------------------------------------------------------------------------*/
@@ -255,4 +227,3 @@ extern stringInt getString(rr::RrConfig config, const char* section, const char*
 extern Person getPerson(QQ_T QQ);
 // 设置交流方信息
 extern void setPerson(QQ_T QQ);
- 

@@ -6,106 +6,6 @@ extern char* ROBOTINI = "ShallowBird.ini";
 extern char* PERSONINI = "C:\\Person.ini";
 extern const QQ_T MASTERQQ = 2890851110;
 
-Person::Person()
-{
-}
-
-Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth):
-	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
-{
-}
-
-Robot::Robot()
-{
-}
-
-Robot::Robot(string name, gender_t gender, time_b birth,
-	string* hobby, string* likeFood, string* likeSport, string* oral,
-	string dream, Person lover,
-	int hobbyNum, int likeFoodNum, int likeSportNum, int oralNum):
-	m_name(name), m_gender(gender), m_birth(birth),
-	m_dream(dream), m_lover(lover),
-	m_hobbyNum(hobbyNum), m_likeFoodNum(likeFoodNum),
-	m_likeSportNum(likeSportNum), m_oralNum(oralNum)
-{
-	
-	for (int i = 0; i < hobbyNum; ++i) {
-		m_hobby.push_back(hobby[i]);
-	}
-
-	for (int i = 0; i < likeFoodNum; ++i) {
-		m_likeFood.push_back(likeFood[i]);
-	}
-
-	for (int i = 0; i < likeSportNum; ++i) {
-		m_likeSport.push_back(likeSport[i]);
-	}
-
-	for (int i = 0; i < oralNum; ++i) {
-		m_oral.push_back(oral[i]);
-	}
-}
-
-
-
-Robot::Robot(char* file, char* personfile)
-{
-	// 获取文件中的数据
-	rr::RrConfig robotini;
-	robotini.ReadConfig(file);
-
-	string name = robotini.ReadString("Robot", "name", "");
-	gender_t gender;
-	if (robotini.ReadString("Robot", "gender", "") == "男") {
-		gender = gender_t::boy;
-	}
-	else if (robotini.ReadString("Robot", "gender", "") == "女") {
-		gender = gender_t::girl;
-	}
-	else {
-		gender = gender_t::unknown;
-	}
-	string dream = robotini.ReadString("Robot", "dream", "");
-
-	QQ_T loverQQ = atoi(robotini.ReadString("Robot", "lover", "").c_str());
-	// 寻找文件中QQ
-	rr::RrConfig personini;
-	personini.ReadConfig(personfile);
-	string sitem = "QQ" + to_String(loverQQ);
-	int goodwill = personini.ReadInt(sitem.c_str(), "goodwill", 0);
-	Person lover{ loverQQ, goodwill };
-
-	time_b birth;
-	birth.year = robotini.ReadInt("Birth", "year", 0);
-	birth.month = month_t(robotini.ReadInt("Birth", "month", 0));
-	birth.day = day_t(robotini.ReadInt("Birth", "day", 0));
-	stringInt hobby = getString(robotini, "Hobby", "hobby", "");
-	stringInt likefood = getString(robotini, "likeFood", "likefood", "");
-	stringInt likesport = getString(robotini, "likeSport", "likesport", "");
-	stringInt oral = getString(robotini, "Oral", "oral", "");
-
-
-	// 写入数据
-	m_name = name;
-	m_gender = gender;
-	m_birth = birth;
-	m_hobby = hobby.str;
-	m_hobbyNum = hobby.i;
-	m_likeFood = likefood.str;
-	m_likeFoodNum = likefood.i;
-	m_likeSport = likesport.str;
-	m_likeSportNum = likesport.i;
-	m_oral = oral.str;
-	m_oralNum = oral.i;
-	m_dream = dream;
-	m_lover = lover;
-
-}
-
-Robot::~Robot()
-{
-}
-
 
 extern string to_String(QQ_T n)
 {
@@ -189,8 +89,6 @@ extern Person getPerson(QQ_T QQ)
 void setPerson(QQ_T QQ)
 {
 	// 读取 QQ 的字段地址
-	rr::RrConfig personini;
-	personini.ReadConfig(PERSONINI);
 	string sitem = "QQ" + to_String(QQ);
 
 	// 保存现有的person数据
@@ -248,4 +146,133 @@ void setPerson(QQ_T QQ)
 			::WritePrivateProfileString(sitem.c_str(), "birth.day", to_String((int)day_t::d1).c_str(), PERSONINI);
 		}
 	}
+}
+
+
+Person::Person()
+{
+}
+
+Person::Person(QQ_T QQ, int goodWill, string name, gender_t gender, time_b birth):
+	m_QQ(QQ), m_goodWill(goodWill), m_name(name), m_gender(gender), m_birth(birth)
+{
+}
+
+void Person::setGoodwill(int goodwill)
+{
+	string sitem = "QQ" + to_String(m_QQ);
+	::WritePrivateProfileString(sitem.c_str(), "goodwill", to_String(goodwill).c_str(), PERSONINI);
+}
+
+void Person::setName(string name)
+{
+	string sitem = "QQ" + to_String(m_QQ);
+	::WritePrivateProfileString(sitem.c_str(), "name", name.c_str(), PERSONINI);
+}
+
+void Person::setGender(gender_t gender)
+{
+	string sitem = "QQ" + to_String(m_QQ);
+	::WritePrivateProfileString(sitem.c_str(), "gender", to_String((int)gender).c_str(), PERSONINI);
+}
+
+void Person::serBirth(time_b birrh)
+{
+	string sitem = "QQ" + to_String(m_QQ);
+	::WritePrivateProfileString(sitem.c_str(), "birth.year", to_String((int)birrh.year).c_str(), PERSONINI);
+	::WritePrivateProfileString(sitem.c_str(), "birth.month", to_String((int)birrh.month).c_str(), PERSONINI);
+	::WritePrivateProfileString(sitem.c_str(), "birth.day", to_String((int)birrh.day).c_str(), PERSONINI);
+}
+
+Robot::Robot()
+{
+}
+
+Robot::Robot(string name, gender_t gender, time_b birth,
+	string* hobby, string* likeFood, string* likeSport, string* oral,
+	string dream, Person lover,
+	int hobbyNum, int likeFoodNum, int likeSportNum, int oralNum):
+	m_name(name), m_gender(gender), m_birth(birth),
+	m_dream(dream), m_lover(lover),
+	m_hobbyNum(hobbyNum), m_likeFoodNum(likeFoodNum),
+	m_likeSportNum(likeSportNum), m_oralNum(oralNum)
+{
+	
+	for (int i = 0; i < hobbyNum; ++i) {
+		m_hobby.push_back(hobby[i]);
+	}
+
+	for (int i = 0; i < likeFoodNum; ++i) {
+		m_likeFood.push_back(likeFood[i]);
+	}
+
+	for (int i = 0; i < likeSportNum; ++i) {
+		m_likeSport.push_back(likeSport[i]);
+	}
+
+	for (int i = 0; i < oralNum; ++i) {
+		m_oral.push_back(oral[i]);
+	}
+}
+
+
+
+Robot::Robot(char* file, char* personfile)
+{
+	// 获取文件中的数据
+	rr::RrConfig robotini;
+	robotini.ReadConfig(file);
+
+	string name = robotini.ReadString("Robot", "name", "");
+	gender_t gender;
+	if (robotini.ReadString("Robot", "gender", "") == "男") {
+		gender = gender_t::boy;
+	}
+	else if (robotini.ReadString("Robot", "gender", "") == "女") {
+		gender = gender_t::girl;
+	}
+	else {
+		gender = gender_t::unknown;
+	}
+	string dream = robotini.ReadString("Robot", "dream", "");
+
+	QQ_T loverQQ = atoll(robotini.ReadString("Robot", "lover", "").c_str());
+	// 寻找文件中QQ
+	Person lover = getPerson(loverQQ);
+	/*
+	rr::RrConfig personini;
+	personini.ReadConfig(personfile);
+	string sitem = "QQ" + to_String(loverQQ);
+	int goodwill = personini.ReadInt(sitem.c_str(), "goodwill", 0);
+	Person lover{ loverQQ, goodwill };
+	*/
+	time_b birth;
+	birth.year = robotini.ReadInt("Birth", "year", 0);
+	birth.month = month_t(robotini.ReadInt("Birth", "month", 0));
+	birth.day = day_t(robotini.ReadInt("Birth", "day", 0));
+	stringInt hobby = getString(robotini, "Hobby", "hobby", "");
+	stringInt likefood = getString(robotini, "likeFood", "likefood", "");
+	stringInt likesport = getString(robotini, "likeSport", "likesport", "");
+	stringInt oral = getString(robotini, "Oral", "oral", "");
+
+
+	// 写入数据
+	m_name = name;
+	m_gender = gender;
+	m_birth = birth;
+	m_hobby = hobby.str;
+	m_hobbyNum = hobby.i;
+	m_likeFood = likefood.str;
+	m_likeFoodNum = likefood.i;
+	m_likeSport = likesport.str;
+	m_likeSportNum = likesport.i;
+	m_oral = oral.str;
+	m_oralNum = oral.i;
+	m_dream = dream;
+	m_lover = lover;
+
+}
+
+Robot::~Robot()
+{
 }
