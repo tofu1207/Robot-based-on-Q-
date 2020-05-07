@@ -13,20 +13,87 @@ void text(Msg msg, Robot robot)
 	}
 }
 
-extern void helloWorld(Msg msg, Robot robot) {
+extern bool helloWorld(Msg msg, Robot robot) {
 
 	// 如果需要随机回应, 需要加上这条代码
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	// 如果需要修改交流方信息, 需要加上这条代码
-	Person person = getPerson(msg.fromQQ);
+	//Person person = getPerson(msg.fromQQ);
 	
 	if (entryMatch(msg, "你好")) {
-		// 这是个根据好感来随机输出信息, 有8条信息可以输入, 每两条作为一个分界
-		// 你也可以在regexFun.cpp中自行定义接口
-		randSaying(person, msg, "你好.", "嗯。");
-		// 这里是修改了交流方的好感值, 其他属性也可以修改
-		person.setGoodwill(++person.m_goodWill);
+		int ret = rand() % 3;
+		if (0 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "你好"); }
+		if (1 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "嗯?"); }
+		if (2 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "?"); }
+		return true;
 	}
+	return false;
+}
 
+// 叫名字
+extern bool sayName(Msg msg, Robot m_robot)
+{
+	srand((unsigned int)time(NULL));
+	if (entryMatch(msg, m_robot.getName().c_str())) {
+		int ret = rand() % 5;
+		if (0 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "我在"); }
+		if (1 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "嗯"); }
+		if (2 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "?"); }
+		if (3 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "怎么了"); }
+		if (4 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "干嘛?"); }
+		return true;
+	}
+	return false;
+}
+
+// 小草小草
+extern bool sayCao(Msg msg, Robot m_robot) {
+	if (entryMatch(msg, "小草")) {
+		CQApi::sendPrivateMag(msg.fromQQ, "小草小草");
+		return true;
+	}
+	return false;
+}
+
+// 在不在?
+extern bool sayAlive(Msg msg, Robot m_robot) {
+	if (entryMatch(msg, "在吗") || entryMatch(msg, "在不")) {
+		srand((unsigned int)time(NULL));
+		int ret = rand() % 5;
+		if (0 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "怎么了"); }
+		if (1 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "在的"); }
+		if (2 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "怎么?"); }
+		if (3 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "?"); }
+		if (4 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "我在"); }
+		return true;
+	}
+	return false;
+}
+
+// 在干嘛呢?
+extern bool sayWork(Msg msg, Robot m_robot) {
+	if (entryMatch(msg, "在干")) {
+		srand((unsigned int)time(NULL));
+		int ret = rand() % 5;
+		if (0 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "干活..."); }
+		if (1 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "工作"); }
+		if (2 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "码字呢"); }
+		if (3 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "吃东西"); }
+		if (4 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "发呆"); }
+		return true;
+	}
+	return false;
+}
+
+
+// 私聊消息无匹配回应
+void nomatch(Msg msg, Robot m_robot) {
+	srand((unsigned int)time(NULL));
+	int ret = rand() % 10;
+	if (0 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "?"); }
+	if (1 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "......"); }
+	if (2 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "嗯嗯"); }
+	if (3 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "好"); }
+	if (4 == ret) { CQApi::sendPrivateMag(msg.fromQQ, "昂..."); }
 }

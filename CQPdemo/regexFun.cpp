@@ -1,6 +1,6 @@
 #include "regexFun.h"
 #include "CQApi.h"
-
+/*
 void randSaying(Person person, Msg msg,
 	const char* ch1, const char* ch2, const char* ch3,
 	const char* ch4, const char* ch5, const char* ch6,
@@ -41,6 +41,7 @@ void randSaying(Person person, Msg msg,
 	}
 	
 }
+*/
 
 extern bool entryMatch(Msg msg, const char* re) {
 

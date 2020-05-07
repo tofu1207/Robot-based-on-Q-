@@ -1,4 +1,4 @@
-#define CQAPPID "com.example.tofuRobot" //请修改AppID，规则见 http://d.cqp.me/Pro/开发/基础信息
+#define CQAPPID "com.example.ShallowBirdRobot" //请修改AppID，规则见 http://d.cqp.me/Pro/开发/基础信息
 #define CQAPPINFO CQAPIVERTEXT "," CQAPPID
 
 #pragma once

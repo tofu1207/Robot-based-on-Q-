@@ -14,6 +14,7 @@ void RobotAsync::pushMsg(Msg msg)
 
 void RobotAsync::threadMain()
 {
+    bool ret = false;
     while (!m_quit)
     {
         if (m_MsgBuffer.size() > 0)
@@ -34,22 +35,30 @@ void RobotAsync::threadMain()
                 /*--------------------------------------------------------------------------------
                 *----------------------------   私聊消息队列   -----------------------------------*
                  --------------------------------------------------------------------------------*/
+            ret = false;
             if (msg.fromAddr == 0) {
-                // 问好(示例)
-                helloWorld(msg, m_robot);
+                if (helloWorld(msg, m_robot)    |
+                    sayName(msg, m_robot)       |
+                    //sayCao(msg, m_robot)        |
+                    sayAlive(msg, m_robot)      |
+                    sayWork(msg, m_robot)
+                    ) {
 
-
+                    ret = true;
+                }
             }
+            if (ret == false) {
+                // 无匹配时 回复(私聊)
+                nomatch(msg, m_robot);
+            }
+         
                 /*--------------------------------------------------------------------------------
                 *----------------------------   群聊消息队列   -----------------------------------*
                  --------------------------------------------------------------------------------*/
             if (msg.fromAddr != 0) {    //注意, 群聊和讨论组发送消息的接口是不一样的
                 
 
-
             }
-            
-      
         }
         else
         {
