@@ -47,7 +47,7 @@ void RobotAsync::threadMain()
                     ret = true;
                 }
             }
-            if (ret == false) {
+            if (msg.fromAddr == 0 && ret == false) {
                 // Œﬁ∆•≈‰ ± ªÿ∏¥(ÀΩ¡ƒ)
                 nomatch(msg, m_robot);
             }
